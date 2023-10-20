@@ -1,0 +1,656 @@
+Nodejs
+
+created file server.js
+		console.log("HELLO WORLD")
+to run in terminal -- node server
+
+window can not access nodejs.
+		console.log(global) ---> global object
+		??Window object??
+
+to connect just type node in terminal you can do =,-,+operations.
+
+Dont use import for file
+es6 model not in nodejs
+
+const os = require('os') ---> for import
+console.log(os.type())
+console.log(os.version())
+console.log(os.homedir())
+
+some default values available in nodejs
+
+	console.log(_dirname)
+	console.log(_filename)
+
+const path = require('path')
+	
+	console.log(path.dirname(_filename))
+	console.log(path.basename(_filename))
+	console.log(path.extname(_filename))
+	console.log(path.parse(_filename)) ---> gives object about a file
+	
+	
+create file math.js
+	
+	const add = (a,b) => a+b;
+	const sub = (a,b) => a-b;
+	
+	module.exports = (add, sub)                          //  exports.add = (a,b) => a+b;                  
+	
+server.js
+
+	const math = require('./math')                       //  const(add,sub) = require ('./math')
+	console.log(math.add(3,3))							 //   console.log(add(3,3))
+	console.log(math.sub(3,6))							  
+	
+es6 model
+server js file -- .mjs file
+	
+	import of from 'os'
+	rename the file server.mjs 
+
+error: require cannot use es6 model
+		
+	import (add,sub) from './math.js'
+	
+	run it like node server.mjs
+	
+##################################################################################################################
+												FILE SYSTEM
+	
+-----> server.mjs
+	
+import { readFile } from 'node:fs';
+
+readFile('/etc/passwd', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+
+folder -> files -> sample.txt file -> hi,..dkek
+
+import { readFile } from 'node:fs';
+
+readFile('./files/sample.txt', (err, data) => {
+  if (err) throw err;
+  console.log(data.toString());		 'utf8',
+});
+
+terminal : node server.mjs
+output   :  some numbers by the bytes
+output   :  hi, ...dkek
+
+
+import { readFile } from 'node:fs';
+
+readFile('./files/sample.txt', 'utf8',(err, data) => {
+  if (err) throw err;
+  console.log(data);		
+});
+
+output : hi, ...dkek
+
+
+import { readFile } from 'node:fs';
+
+readFile('./files/ sample.txttttt', 'utf8',(err, data) => {
+  if (err) throw err;
+  console.log(data);		
+});
+//exit on uncaught errors
+process.on('uncaughtException',err => {
+	console.error(`There was an uncaught error: $(err)`)
+	process.exit(1)
+})
+
+output : error : no such file or directory, open '.files/ .txttttt'
+
+readFile('./files/ sample.txttttt', 'utf8',(err, data) => {
+  if (err) throw err;
+  console.log(data);		
+});
+
+console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+//exit on uncaught errors
+process.on('uncaughtException',err => {
+	console.error(`There was an uncaught error: $(err)`)
+	process.exit(1)
+})
+
+output : Hiiiiiiiiiiiiiiiiiiiiii -----------------> first this one executed then only others are execute because its an easy function
+		error : no such file or directory, open '.files/ .txttttt'
+		No error : output : hi, ...dkek
+
+--> server.js
+
+	const os = require('fs') 
+	const path = require('path')
+	
+	fs.readFile(path.join(_dirname,'files','sample.txt', 'utf8',(err, data) => {
+	if (err) throw err;
+	console.log(data);		
+	});
+
+	console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  hi, ...dkek
+
+
+--> server.js
+
+	const os = require('fs') 
+	const path = require('path')
+	
+	fs.readFile(path.join(_dirname,'files','sample.txt', 'utf8',(err, data) => {
+	if (err) throw err;
+	console.log(data);		
+	});
+	
+	fs.writeFile(path.join(_dirname,'files','sample.txt', 'Welcome to node',(err) => {
+	if (err) throw err;
+	console.log("write complete");		
+	});
+	
+	console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  hi, ...dkek
+		  write complete
+		  
+--> server.js
+
+	const os = require('fs') 
+	const path = require('path')
+	
+	fs.readFile(path.join(_dirname,'files','.txt', 'utf8',(err, data) => {
+	if (err) throw err;
+	console.log(data);		
+	});
+	
+	fs.writeFile(path.join(_dirname,'files','.txt', 'Welcome to node',(err) => {
+	if (err) throw err;
+	console.log("write complete");		
+	});
+	
+	fs.appendFile(path.join(_dirname,'files','.txt', '\n\n Thank you',(err) => {
+	if (err) throw err;
+	console.log("append complete");		
+	});
+	
+	console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  
+		  write complete
+		  hi, ...dkek
+		  append complete ---> but the file not get updated
+		  
+--> server.js
+
+	const os = require('fs') 
+	const path = require('path')
+	
+	fs.readFile(path.join(_dirname,'files','.txt', 'utf8',(err, data) => {
+	if (err) throw err;
+	console.log(data);		
+	});
+	
+	fs.writeFile(path.join(_dirname,'files','.txt', 'Welcome to node',(err) => {
+	if (err) throw err;
+	console.log("write complete");
+		
+	fs.appendFile(path.join(_dirname,'files','.txt', '\n\n Thank you',(err) => {
+	if (err) throw err;
+	console.log("append complete");		
+	})
+	});
+	
+	
+	console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  
+		  write complete
+		  hi, ...dkek
+		  append complete ---> Now the thank you get updated on the file
+		  
+-------------> we can create file using append
+
+--> server.js
+
+	const os = require('fs') 
+	const path = require('path')
+	
+	fs.readFile(path.join(_dirname,'files','.txt', 'utf8',(err, data) => {
+	if (err) throw err;
+	console.log(data);		
+	});
+	
+	fs.writeFile(path.join(_dirname,'files','.txt', 'Welcome to node',(err) => {
+	if (err) throw err;
+	console.log("write complete");		
+	});
+	
+	fs.appendFile(path.join(_dirname,'files','.txt', '\n\n Thank you',(err) => {
+	if (err) throw err;
+	console.log("append complete");		
+	});
+	
+	fs.appendFile(path.join(_dirname,'files','new.txt', '\n\n Thank you',(err) => {
+	if (err) throw err;
+	console.log("append complete");	
+	
+	console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  
+		  write complete
+		  hi, ...dkek
+		  append complete ---> thank you got update on new.txt file
+		  
+#########RENANE
+
+--> server.js
+
+	const os = require('fs') 
+	const path = require('path')
+	
+	fs.readFile(path.join(_dirname,'files','.txt', 'utf8',(err, data) => {
+	if (err) throw err;
+	console.log(data);		
+	});
+	
+	fs.writeFile(path.join(_dirname,'files','.txt', 'Welcome to node',(err) => {
+	if (err) throw err;
+	console.log("write complete");		
+	
+		fs.appendFile(path.join(_dirname,'files','.txt', '\n\n Thank you',(err) => {
+		if (err) throw err;
+		console.log("append complete");		
+		});
+		
+		fs.rename(path.join(_dirname,'files','.txt'), path.join(_dirname,'files','rename.txt'),(err) => {
+		if (err) throw err;
+		console.log("rename complete");	
+		});
+	
+	});
+	
+	
+	console.log("Hiiiiiiiiiiiiiiiiiiiiii")
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  
+		  write complete
+		  hi, ...dkek
+		  rename complete ---> the filename got renamed as rename.txt
+
+#############################################################################################################################
+##############################################################################################################################	  
+
+--> server.js
+
+	const path = require('path')
+	const fsPromises = require('fs').promises
+	
+	const fileOps = async () => {
+		try{
+			const data = await fsPromises.readFile(path.join(_dirname,'files','new.txt'), 'utf8')		
+			console.log(data);
+			await fsPromises.writeFile(path.join(_dirname,'files','.txt'), 'Welcome to node')
+			console.log("write complete");
+			await fsPromises.appendFile(path.join(_dirname,'files','.txt'), '\n\n Thank you')
+			console.log("append complete");
+			await fsPromises.rename(path.join(_dirname,'files','.txt'),path.join(_dirname,'files','rename.txt')
+			console.log("rename complete");
+		} catch(err){
+			console.error(err)
+		 }
+	}
+	fileOps()
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  
+		  write complete
+		  hi, ...dkek
+		  append complete ---> thank you got update on new.txt file
+		  
+
+###############delete file
+--> server.js
+
+	const path = require('path')
+	const fsPromises = require('fs').promises
+	
+	const fileOps = async () => {
+		try{
+			const data = await fsPromises.readFile(path.join(_dirname,'files','new.txt'), 'utf8')		
+			console.log(data);
+			await fsPromises.writeFile(path.join(_dirname,'files','.txt'), 'Welcome to node')
+			console.log("write complete");
+			await fsPromises.appendFile(path.join(_dirname,'files','.txt'), '\n\n Thank you')
+			console.log("append complete");
+			await fsPromises.rename(path.join(_dirname,'files','.txt'),path.join(_dirname,'files','rename.txt')
+			console.log("rename complete");
+			await fsPromises.unlink(path.join(_dirname,'files','.txt'))
+			console.log("delete complete");
+		} catch(err){
+			console.error(err)
+		 }
+	}
+	fileOps()
+	
+	//exit on uncaught errors
+	process.on('uncaughtException',err => {
+		console.error(`There was an uncaught error: $(err)`)
+		process.exit(1)
+	})
+	
+   run : node server
+output :  
+		  write complete
+		  hi, ...dkek
+		  append complete ---> thank you got update on new.txt file
+		  delete complete
+
+###############################################################################################################
+
+---->stream.js
+
+const fs = require('fs')
+const rs = fs.createReadStream(path.join(_dirname,'files','bigfile.txt'),{encoding: 'utf8'})
+const ws = fs.createWriteStream(path.join(_dirname,'files','new_bigfile.txt'))
+
+rs.on('data',(dataChunk) => {
+	ws.write(dataChunk)
+})
+
+===> folder files
+------>bigfile.txt
+	create big file 1000 lines
+
+---->stream.js
+
+const fs = require('fs')
+const path = require('path')
+const rs = fs.createReadStream(path.join(_dirname,'files','bigfile.txt'),{encoding: 'utf8'})
+const ws = fs.createWriteStream(path.join(_dirname,'files','new_bigfile.txt'))
+
+rs.on('data',(dataChunk) => {
+	ws.write(dataChunk)
+})
+
+rs.pipe(ws)        // alternate for the dataChunk
+
+run : node stream
+output : bigfile to new_bigfile copy pasted
+
+###########################################################
+#				create directory						  #
+###########################################################
+
+--->dr.js
+
+const fs = require('fs')
+
+fs.mkdir('./new',(err)) => {
+	if(err) throw err
+	console.log('Directory created')
+}
+
+
+--->dr.js
+
+const fs = require('fs')
+if(fs.existsSync(./new')){
+		fs.mkdir('./new',(err)) => {                              // fs.rmdir('./new',(err)) => {
+		if(err) throw err
+		console.log('Directory created')
+	}
+}
+
+#####################################################################################################################
+										NODE PACKAGE MANAGER
+#####################################################################################################################
+
+										
+----->index.js
+	console.log("testing")
+	console.log("visit")
+ 
+ % npm i nodemon -g
+ % nodemon -v
+ 3.0.1
+ % nodemon
+ testing
+ visit
+ 
+----->
+ % npm init
+ 
+ % npm i date-fns ==>dependency created in package.json
+ 
+ you want ignore some files to upload to git so create file gitignore
+ --->gitignore
+		node_modules
+
+		when we give npm install, it will go to package.json and install all the modules in that json file
+		
+ --> index.js
+		
+		const (format) = require('data-fns')
+		console.log(format(new Date(), 'ddMMyyyy/tHH:mm:ss'))
+		
+	RUN : npm run dev
+
+node mon execute every time when we change it in the code.
+
+	package .json
+		start : "node index.js"
+		dev : "nodemon index"
+		
+###########uuid
+
+% npm i uuid
+
+	package.json
+			^9.0.9 major.minor.patch version
+			~ -> dont allow to update
+			^ -> only update minor not major version
+			* -> allow all
+		
+		remove package
+			% npm rm nodemon -D
+
+-----> index.js
+
+	const {v4} = require ('uuid')
+	const {v4:uuid} = require ('uuid')
+	console.log(uuid())
+	
+	output : give some id that is unique consist of all letters
+	
+#########################################################################################
+								EVENT EMITTER
+#####################################################################################3###
+
+				
+	
+--------> log_events.js
+		
+		const {format} = require('date-fns')
+		const {v4:uuid} = require('uuid')
+		
+		const fs = require('fs')
+		const fsPromises =require('fs').promises
+		const path = require('path')
+		
+		const logEvents = async (message) => {
+			const datetime = `${format(new Date(), 'ddMMyyyy\tHH:mm:ss')}`
+			const logItem = `${datetime}\t${uuid()}\t${message}\n`
+			console.log(logItem)
+		}
+		try{
+			if (fs.existsSync(path.join(_dirname,'logs'))){
+				await fsPromises.mkdir(path.join(_dirname,'logs'))
+			}
+			await fsPromises.appendFile(path.join(_dirname,'logs','eventFile.txt'),logItem)
+			
+		}catch(err){
+			console.log(err)
+		}
+	
+		module.exports = logEvents
+		
+--------------> index.js
+
+		const logEvents = require('./logEvents')
+		
+		
+const EventEmitter = require('node:events');              --------------> got this code snippet from node js-docs-version-event 
+
+class MyEmitter extends EventEmitter {}
+
+const myEmitter = new MyEmitter();
+myEmitter.on('event', () => {
+  console.log('an event occurred!');
+});
+myEmitter.emit('event');
+			
+			
+				const EventEmitter = require('events');
+
+				class MyEmitter extends EventEmitter {}
+				
+				const myEmitter = new MyEmitter();
+				myEmitter.on('log', (msg) => {
+				logEvents(msg);
+				});
+				myEmitter.emit('log','log event emitted');
+				
+		
+		termina: npm run dev
+		output : log directory created
+				  event file.txt created ---> 1002345 32:45:46 35344 log event emitted
+				
+#############################################################################################################
+
+#############################################################################################################
+								WEB SERVER
+	
+------>index.html
+
+		<body>
+				<h1> Hello Node </h1>
+				<h2> I will learn </h2>
+		</body>
+		
+		open with live server ---------live server extenion should be enable
+		
+		
+------> server.js
+		
+		const http = require('http')
+		const port = 3000
+		
+		const server = http.createServer((req,res) => {
+			res.write('Hi people')
+			res.end()
+		})
+		
+		server.listen(PORT,(error)=>{
+			if(error){
+			console.log(error)
+			}else{
+				console.log('Server is running on' + PORT)
+			}
+			
+		})
+		
+		TER: % node server
+		output: server is running on 3000
+		website: Hi people
+		
+------> server.js
+		
+		const http = require('http')
+		const port = 3000
+		const fs = require('fs')
+		
+		const server = http.createServer((req,res) => {
+			res.writeHead(200,{'Contnet-Type': 'text/html'})
+			fs.readFile('index.html',(error,data)=>{
+				if(error){
+					res.writeHead(404)
+					res.write('Page not found')
+				}else{
+					res.write(data)
+				}
+				res.end()
+			})
+			
+			
+		})
+		
+		server.listen(PORT,(error)=>{
+			if(error){
+			console.log(error)
+			}else{
+				console.log('Server is running on' + PORT)
+			}
+			
+		})
+		
+		TER: % node server
+		output: server is running on 3000
+		website: Hi people
+		
+		
+		#############################################################################
+		#     https://github.com/gitdagray/nodejs_web_server/blob/main/server.js    #
+		#############################################################################
+		
